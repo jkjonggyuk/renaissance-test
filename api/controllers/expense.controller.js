@@ -1,6 +1,6 @@
 const db = require("../models");
 const Expense = db.expenses;
-const Op = db.Sequelize.Op;
+const ExpenseCategory = db.expenseCategories;
 
 // Creates an expense
 // req.body expected to have cost(required), name, and category.
@@ -15,9 +15,10 @@ exports.createExpense = (req, res) => {
     const expense = {
         name: req.body.name ? req.body.name : "",
         cost: req.body.cost,
-        category: req.body.category ? req.body.category : "",
+        // category: req.body.category ? req.body.category : "",
+        expenseCategoryId: req.body.expenseCategoryId ? req.body.expenseCategoryId : null
     };
-
+    
     Expense.create(expense)
         .then(data => {
             res.send(data);
@@ -32,7 +33,7 @@ exports.createExpense = (req, res) => {
 
 // Retrieve all expenses 
 exports.getAllExpense = (req, res) => {
-    Expense.findAll()
+    Expense.findAll({ include: ExpenseCategory })
         .then(data => {
             res.send(data);
         })

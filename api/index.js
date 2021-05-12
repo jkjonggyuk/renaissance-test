@@ -7,6 +7,7 @@ dotenv.config();
 const db = require("./models");
 
 const expenseRouter = require("./routes/expense.router");
+const expenseCategoryRouter = require("./routes/expenseCategory.router");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cookieParer());
 // Set up Router
 // /api/expenses/...
 expenseRouter(app);
+expenseCategoryRouter(app);
 
 // Initialize server
 const PORT = process.env.PORT || 8080;

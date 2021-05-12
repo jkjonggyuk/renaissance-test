@@ -25,5 +25,12 @@ db.sequelize = sequelize;
 
 // Table
 db.expenses = require("./expense.model")(sequelize, Sequelize);
+db.expenseCategories = require("./expenseCategory.model")(sequelize, Sequelize);
+
+// Add Relation
+// 
+// Expense - Expense Category - Many to One
+db.expenseCategories.hasMany(db.expenses);
+db.expenses.belongsTo(db.expenseCategories);
 
 module.exports = db;
