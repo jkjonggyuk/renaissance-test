@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const cookieParer = require("cookie-parser");
 const logger = require("morgan");
 const dotenv = require("dotenv");
@@ -8,6 +9,9 @@ const db = require("./models");
 const expenseRouter = require("./routes/expense.router");
 
 const app = express();
+
+// Adding CORS Option to enable cross-origin 
+app.use(cors({ origin: "http://localhost:3000" }));
 
 app.use(logger("dev"));
 app.use(express.json());
