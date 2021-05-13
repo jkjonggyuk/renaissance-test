@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
-
-import expenseService from "../../services/expense.service";
+import React, { useState } from "react";
+import { Container } from "@material-ui/core";
 import ExpenseForm from "../ExpenseForm";
+import ExpenseList from "../ExpenseList";
 
 export default function Expense() {
-    const [expenseList, setExpenseList] = useState([]);
+    // Communication state variable to let form to re-render list when submitted.
+    const [reloadToggle, setReloadToggle] = useState(false);
 
+    // Re-render ExpenseList
     const renderExpenseList = () => {
-        expenseService.getAll()
-            .then((data) => {
-                if (data.data && data.data.length > 0) {
-                    setExpenseList(data.data);
-                }
-            });
-    }
-
-    useEffect(() => {
-        renderExpenseList();
-    }, []);
-
-    const deleteExpense = (id) => {
-        expenseService.delete(id)
-            .then(() => {
-                renderExpenseList();
-            });
+        setReloadToggle(!reloadToggle)
     }
 
     return (
@@ -32,30 +17,7 @@ export default function Expense() {
             <h1>Expense Tracker</h1>
             <ExpenseForm onComplete={renderExpenseList} />
 
-            <h2>Expenses</h2>
-            <TableContainer component={Paper} >
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Cost</TableCell>
-                            <TableCell>Category</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {expenseList.map((ex, index) => 
-                            <TableRow key={index}>
-                                <TableCell>{ex.name}</TableCell>
-                                <TableCell>${parseFloat(ex.cost).toFixed(2)}</TableCell>
-                                <TableCell>{ex.expenseCategory ? ex.expenseCategory.name : null}</TableCell>
-                                <button onClick={() => {deleteExpense(ex.id)}}>
-                                    Delete
-                                </button>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <ExpenseList reloadToggle={reloadToggle} />
             
         </Container>
     )

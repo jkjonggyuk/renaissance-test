@@ -5,18 +5,23 @@ import expenseService from "../services/expense.service";
 import expenseCategoryService from "../services/expenseCategory.service";
 
 export default function ExpenseForm(props) {
+    // re-renders expense list upon calling
     const { onComplete } = props;
 
+    // state for new expense being created
     const [newExpense, setNewExpense] = useState({
         name: "",
         cost: "",
         expenseCategoryId: 0,
     });
 
+    // state for new category that the user wants to create
     const [newCategory, setNewCategory] = useState("");
 
+    // all category options already created by the user
     const [expenseCategories, setExpenseCategories] = useState([]);
     
+    // retrieve cagegories 
     const reloadCategories = () => {
         expenseCategoryService.getAll()
         .then((data) => {
@@ -30,6 +35,7 @@ export default function ExpenseForm(props) {
         reloadCategories();
     }, [])
 
+    // Reset the form inputs and reload the expense list
     const resetFormAndReloadList = () => {
         setNewExpense({name: "", cost: "", expenseCategoryId: 0});
         setNewCategory("");
@@ -37,13 +43,16 @@ export default function ExpenseForm(props) {
         alert("Expense successfully added!");
     }
 
+    // Upon submit
     const handleExpenseSubmit = (e) => {
         e.preventDefault();
-        // 
+        // Validate input for cost
         if (newExpense.cost === "" || isNaN(parseFloat(newExpense.cost))) {
             alert("You need a valid cost!");
             return;
         }
+        // If no option for category is chosen, but the user wants to add new category
+            // add category first, then add expense
         if (newExpense.expenseCategoryId === 0 && newCategory !== "") {
             expenseCategoryService.create({name: newCategory})
                 .then((createdCategory) => {
