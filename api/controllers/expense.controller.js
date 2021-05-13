@@ -58,7 +58,7 @@ exports.deleteExpense = (req, res) => {
                     message: "Expense deleted successfully."
                 });
             } else {
-                res.send({
+                res.status(404).send({
                     message: "Cannot delete the expense."
                 });
             }
